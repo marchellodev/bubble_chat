@@ -4,7 +4,7 @@
 
 
     <application
-            android:label="bubble_chat"
+            android:label="Bubble Chat"
             android:name="${applicationName}"
             android:icon="@mipmap/ic_launcher"
             android:usesCleartextTraffic="true">
