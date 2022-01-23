@@ -1,4 +1,6 @@
 
+import 'dart:convert';
+
 import 'package:bubble_chat/chat.dart';
 import 'package:bubble_chat/dialogs.dart';
 import 'package:flutter/material.dart';
@@ -52,21 +54,18 @@ class _MainScreenState extends State<MainScreen> {
                         setState(() {
                           loading = true;
                         });
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (ctx) => const ChatPage('2213')));
-                        return;
+
                         showLoadingDialog(context);
 
                         try {
                           final res =
                               await http.get(Uri.parse('https://hack22.code.edu.eu.org/api/v1/rooms'));
                           if (res.statusCode == 200) {
-                            // final id = jsonDecode(res.body)['id'] as String;
-                            const id = '123';
+                            final id = jsonDecode(res.body)['id'] as String;
                             Navigator.pop(context);
 
                             Navigator.of(context).push(MaterialPageRoute(
-                                builder: (ctx) => const ChatPage(id)));
+                                builder: (ctx) => ChatPage(id)));
                           } else {
                             Navigator.pop(context);
                             showErrorDialog(context);
