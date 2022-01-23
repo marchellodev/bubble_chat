@@ -25,7 +25,7 @@ class _ChatPageState extends State<ChatPage> {
   void load() {
     showLoadingDialog(context);
 
-    socket = IO.io('https://socketio_hack22.code.edu.eu.org');
+    socket = IO.io('wss://hack22.code.edu.eu.org/socket.io');
     socket.onConnect((_) {
       Navigator.pop(context);
       socket.emit('init', widget.id);
