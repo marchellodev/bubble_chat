@@ -59,7 +59,7 @@ class _MainScreenState extends State<MainScreen> {
 
                         try {
                           final res =
-                              await http.get(Uri.parse('https://hack22.code.edu.eu.org/api/v1/rooms'));
+                              await http.post(Uri.parse('https://hack22.code.edu.eu.org/api/v1/conversations'));
                           if (res.statusCode == 200) {
                             final id = jsonDecode(res.body)['id'] as String;
                             Navigator.pop(context);
