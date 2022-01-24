@@ -5,7 +5,8 @@ import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:open_file/open_file.dart';
 import 'package:uuid/uuid.dart';
-import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:pusher_client/pusher_client.dart';
+// import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class ChatPage extends StatefulWidget {
   final String id;
@@ -20,28 +21,49 @@ class _ChatPageState extends State<ChatPage> {
   final List<types.Message> _messages = [];
   final _user = const types.User(id: '06c33e8b-e835-4736-80f4-63f44b66666c');
   final _server = const types.User(id: '06c33e8b-e835-4736-80f4-63f44b666669');
-  late IO.Socket socket;
+  // late IO.Socket socket;
 
   void load() {
-    showLoadingDialog(context);
+    // showLoadingDialog(context);
 
-    socket = IO.io('wss://hack22.code.edu.eu.org/socket.io');
-    socket.onConnect((_) {
-      Navigator.pop(context);
-      socket.emit('init', widget.id);
+    PusherOptions options = PusherOptions(
+      cluster: 'eu',
+    );
+
+    PusherClient pusher = PusherClient(
+        '0c57d77781b8ac392473',
+        options,
+        enableLogging: true,
+        autoConnect: true
+    );
+
+    Channel channel = pusher.subscribe(widget.id);
+
+    channel.bind("message-received", (PusherEvent? event) {
+      print(event?.data);
     });
-    socket.on('msg', (data) {
 
-      final textMessage2 = types.TextMessage(
-        author: _server,
-        createdAt: DateTime.now().millisecondsSinceEpoch,
-        id: const Uuid().v4(),
-        text: data.toString(),
-      );
+    // pusher.unsubscribe("private-orders");
 
-      _addMessage(textMessage2);
-    });
-    socket.onDisconnect((_) => showErrorDialog(context));
+    // pusher.connect();
+
+    // socket = IO.io('wss://hack22.code.edu.eu.org/socket.io');
+    // socket.onConnect((_) {
+    //   Navigator.pop(context);
+    //   socket.emit('init', widget.id);
+    // });
+    // socket.on('msg', (data) {
+    //
+    //   final textMessage2 = types.TextMessage(
+    //     author: _server,
+    //     createdAt: DateTime.now().millisecondsSinceEpoch,
+    //     id: const Uuid().v4(),
+    //     text: data.toString(),
+    //   );
+    //
+    //   _addMessage(textMessage2);
+    // });
+    // socket.onDisconnect((_) => showErrorDialog(context));
   }
 
   @override
@@ -87,7 +109,7 @@ class _ChatPageState extends State<ChatPage> {
       text: message.text,
     );
 
-    socket.emit('msg', message.text);
+    // socket.emit('msg', message.text);
 
     _addMessage(textMessage);
   }
